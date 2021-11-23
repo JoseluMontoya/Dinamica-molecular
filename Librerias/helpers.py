@@ -13,32 +13,18 @@ def r(vec):
     return norm(vec, axis=-1)
 
 
-def f2(G, M, r, t):
+def F(G, M, r, t):
     """
     Función f correspontiente al ejercício 2 para el problema de Verlet
     """
     return -G*M*r/norm(r)**3
 
 
-def U2(G, M, mEarth, r):
+def UGrav(G, M, mEarth, r):
     """
     Función de energía potencial del ejercício 2
     """
-    return G*M*mEarth/norm(r, axis=-1)**2
-
-def f3(x):
-    """
-    Función f correspontiente al ejercício 3 para la integración con Montecarlo
-    """
-    return np.sin(1/(x*(2 - x)))**2
-
-
-def f3extra(x):
-    """
-    Función f correspontiente al ejercício 3 para la integración con Montecarlo
-    """
-    return np.exp(np.sin(x*1000))*x
-
+    return -G*M*mEarth/norm(r, axis=-1)
 
 def kinetic(m, v):
     """

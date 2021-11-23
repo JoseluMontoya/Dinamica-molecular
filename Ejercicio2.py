@@ -1,8 +1,8 @@
 from functools import partial
 import matplotlib.pyplot as plt
 
-from Librerias.velet import verlet_solve
-from Librerias.helpers import f2, U2, kinetic
+from Librerias.verlet import verlet_solve
+from Librerias.helpers import F, UGrav, kinetic
 from Librerias.helpers import r as R
 
 
@@ -14,8 +14,8 @@ dt = 60*60 # s
 r0 = (-1.4719e11, 0) # m
 v0 = (0, -3.0287e4) # m s-1
 
-f = partial(f2, G, M)
-U = partial(U2, G, M, m)
+f = partial(F, G, M)
+U = partial(UGrav, G, M, m)
 T = partial(kinetic, m)
 r, v, t = verlet_solve(f, r0, v0, dt, N)
 t = t/dt
