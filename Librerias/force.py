@@ -7,9 +7,9 @@ def F_LennardJones(e, sigma, n, m, coord):
     originalShape = np.shape(coord)
     coord = np.reshape(coord, (np.prod(np.shape(coord)[:2]), 3))
     F = (4*e*
-         (n*(sigma/r(coord))**n - m*(sigma/r(coord))**m)/r(coord)
+         (m*(sigma/r(coord))**m - n*(sigma/r(coord))**n)/r(coord)**2
          )[..., None]*coord
-    return -np.reshape(F, originalShape)
+    return np.reshape(F, originalShape)
 
 
 def forceLattice(F, rc, red):
@@ -47,10 +47,14 @@ def forceLattice(F, rc, red):
 
 
 def giveSpeed(N, m, T="Random"):
+    '''
+    Da una velocidad aleatória (angstroms por segundo) a N partículas de
+    masa m (eV/c^2) tal que tengan una temperatura T (K)
+    '''
     v = rnd.uniform(-0.5, 0.5, (N, 3))
     Trand = getT(m, v)
     if type(T) == float or type(T) == int:
         sc = np.sqrt(T/Trand)
         v = sc*v
         Trand = getT(m, v)
-    return v, Trand
+    return v*3e18

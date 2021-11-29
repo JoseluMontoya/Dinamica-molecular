@@ -86,6 +86,8 @@ class lattice:
             --------
             ndarray
                 Coordenadas de los puntos de la red
+            self.r: ndarray
+                Atributo con las coordenadas de la red
         """
         # Generamos los puntos de la celda convencional
         ucell = self.__gen_ucell()
@@ -105,16 +107,18 @@ class lattice:
 
         # Movemos las N copias de la celda convencional a cada punto de
         # la celda de simulación
-        return base + coord
+        r = base + coord
+        self.r0 = r
+        return r
 
-    def plot(self, coord, E=0, F=0, onlyF=False, show=True, save=False):
+    def plot(self, coord=0, E=0, F=0, onlyF=False, show=True, save=False):
         """
         Genera un plot de la red de las dimensiones indicadas
 
             Parámetros
             ----------
-                coord: ndarray
-                    Coordenadas de la red a plotear
+                coord: ndarray, optional
+                    Coordenadas de la red a plotear distintas de las guardadas
                 E: ndarray, optional
                     Array con las energía de cada partícula. Es usa para generar
                     colorear las partículas en base a estas.
@@ -136,6 +140,8 @@ class lattice:
         fig = plt.figure()
 
         ax = fig.add_subplot(111, projection="3d")
+        if (type(coord) != np.ndarray) and hasattr(self, "r0"):
+            coord = self.r0
 
         if not(onlyF):
             if type(E) == np.ndarray:
