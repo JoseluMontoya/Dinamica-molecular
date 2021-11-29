@@ -27,4 +27,4 @@ FCC.plot(r0, F=F0, onlyF=True)
 Temp = 300
 m = 63.55*931.494061e6
 T = partial(getT, m)
-v0, Temp = giveSpeed(len(r0), m, Temp)
+v0 = giveSpeed(len(r0), m, Temp)
