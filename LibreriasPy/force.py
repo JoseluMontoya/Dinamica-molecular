@@ -57,4 +57,4 @@ def giveSpeed(N, m, T="Random"):
         sc = np.sqrt(T/Trand)
         v = sc*v
         Trand = getT(m, v)
-    return v*3e18
+    return v

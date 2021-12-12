@@ -37,7 +37,7 @@ def verlet_solve(f, r0, v0, h, N):
     for i in range(N):
         t[i+1] = h*(i + 1)
         r[i+1] = r[i] + h*vint[i]
-        k = h*f(r[i+1], t[i+1])
-        v[i+1] = vint[i] + 1/2*k
-        vint[i+1] = vint[i] + k
+        k = f(r[i+1], t[i+1])
+        v[i+1] = vint[i] + 1/2*h*k
+        vint[i+1] = vint[i] + h*k
     return r, v, t

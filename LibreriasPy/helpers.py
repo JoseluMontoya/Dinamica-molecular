@@ -1,7 +1,6 @@
 from matplotlib.pyplot import axis
 import numpy as np
 from numpy.linalg import norm
-import numpy.random as rnd
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -42,20 +41,6 @@ def getT(m, v):
     """
     kb = 8.6181024e-5 #eV/K
     return np.sum(r(v)**2, axis=-1)*m/(3*kb*len(v))
-
-
-def giveSpeed(N, m, T="Random"):
-    '''
-    Da una velocidad aleatória (angstroms por segundo) a N partículas de
-    masa m (eV/c^2) tal que tengan una temperatura T (K)
-    '''
-    v = rnd.uniform(-0.5, 0.5, (N, 3))
-    Trand = getT(m, v)
-    if type(T) == float or type(T) == int:
-        sc = np.sqrt(T/Trand)
-        v = sc*v
-        Trand = getT(m, v)
-    return v
 
 
 def set_axes_equal(ax):
