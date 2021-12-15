@@ -1,17 +1,23 @@
 import time
-from matplotlib import projections
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
+import os
 
 from Librerias.helpers import giveSpeed
 from Librerias.lattice import lattice
 from Librerias.verletCy import verlet_solve
+from Librerias.helpers import set_axes_equal
+
+if os.name == "nt":
+    mpl.rcParams["animation.ffmpeg_path"] = r"ffmpeg.exe"
 
 
-FCC = lattice("FCC", 3.603)
-dim = (7, 3, 3)
+a = 3.603
+FCC = lattice("FCC", a)
+dim = (3, 7, 3)
 e = 0.167
 sigma = 2.3151
 rc = 3*sigma
@@ -25,18 +31,16 @@ aComp = np.zeros((len(r0), 3), dtype=np.float)
 aRot = np.zeros((len(r0), 3), dtype=np.float)
 w = np.zeros((len(r0), 3), dtype=np.float)
 
-rxmax = np.max(r0.T[0])
-rymax = np.max(r0.T[1])
-rzmax = np.max(r0.T[2])
+rmax = np.max(r0.T, axis=1)
 
 
-# aComp.T[0][r0.T[0] < rxmax*2/7] = 9e24
-# aComp.T[0][rxmax*5/7 < r0.T[0]] = -9e24
+aComp.T[1][r0.T[1] < rmax[1]*2/7] = -9e24
+aComp.T[1][rmax[1]*5/7 < r0.T[1]] = 9e24
 
-aRot.T[0][r0.T[0] == 0] = -5e25
-# aRot.T[0][r0.T[0] == rxmax] = 5e25
-w.T[0][r0.T[0] == 0] = 1
-# w.T[0][r0.T[0] == rxmax] = 1
+# aRot.T[1][r0.T[1] == 0] = -5e25
+# # aRot.T[1][r0.T[1] == rmax[1]] = 5e25
+# w.T[1][r0.T[1] == 0] = 1
+# # w.T[1][r0.T[1] == rmax[1]] = 1
 
 
 t0 = time.time()
@@ -54,22 +58,21 @@ plt.plot(tiempo, U+T, label='Total')
 plt.legend()
 plt.show()
 
-# fig, ax, imagen, titulo = FCC.plot(r0, show=False)
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
+ax.view_init(0, 0)
 titulo = ax.set_title('Evolución red cristalina   $0 \cdot 10^{{-15}} s$')
 imagen, = ax.plot(r0.T[0], r0.T[1], r0.T[2], linestyle="", marker="o")
+set_axes_equal(ax)
 
-skip = 1
-# def animate(i):
-#     imagen._offsets3d = r[skip*i].T
-#     titulo.set_text("Evolución red cristalina   ${} \cdot 10^{{-15}} s$".format(skip*i))
-#     return imagen, titulo
+skip = 5
+framerate = 120
 def animate(i):
     imagen.set_data(r[skip*i].T[0], r[skip*i].T[1])
     imagen.set_3d_properties(r[skip*i].T[2])
     titulo.set_text("Evolución red cristalina   ${} \cdot 10^{{-15}} s$".format(skip*i))
     return titulo, imagen
 animacion = animation.FuncAnimation(fig,animate,frames = int(N/skip)
-                                    ,repeat = True, interval = 1)
+                                    ,repeat = True, interval = 1000/framerate)
+animacion.save("animacion.mp4", writer=animation.FFMpegWriter(fps=framerate))
 plt.show()
