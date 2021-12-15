@@ -1,4 +1,5 @@
 import time
+from matplotlib import projections
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -53,12 +54,22 @@ plt.plot(tiempo, U+T, label='Total')
 plt.legend()
 plt.show()
 
-fig, ax, imagen, titulo = FCC.plot(r0, show=False)
+# fig, ax, imagen, titulo = FCC.plot(r0, show=False)
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+titulo = ax.set_title('Evolución red cristalina   $0 \cdot 10^{{-15}} s$')
+imagen, = ax.plot(r0.T[0], r0.T[1], r0.T[2], linestyle="", marker="o")
+
 skip = 1
+# def animate(i):
+#     imagen._offsets3d = r[skip*i].T
+#     titulo.set_text("Evolución red cristalina   ${} \cdot 10^{{-15}} s$".format(skip*i))
+#     return imagen, titulo
 def animate(i):
-    imagen._offsets3d = r[skip*i].T
+    imagen.set_data(r[skip*i].T[0], r[skip*i].T[1])
+    imagen.set_3d_properties(r[skip*i].T[2])
     titulo.set_text("Evolución red cristalina   ${} \cdot 10^{{-15}} s$".format(skip*i))
-    return imagen, titulo
+    return titulo, imagen
 animacion = animation.FuncAnimation(fig,animate,frames = int(N/skip)
                                     ,repeat = True, interval = 1)
 plt.show()
