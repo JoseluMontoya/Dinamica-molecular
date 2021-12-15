@@ -4,11 +4,15 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
+import os
 
 from Librerias.helpers import giveSpeed
 from Librerias.lattice import lattice
 from Librerias.verletCy import verlet_solve
 from Librerias.helpers import set_axes_equal
+
+if os.name == "nt":
+    mpl.rcParams["animation.ffmpeg_path"] = r"ffmpeg.exe"
 
 
 a = 3.603
